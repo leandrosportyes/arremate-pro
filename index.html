@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arremate Pro</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+  :root{--preto:#0D0D0D;--ouro:#C9A84C;--ouro-claro:#F0D080;--creme:#F7F3EC;--cinza:#6B6B6B;--verde:#2A7A4B;--vermelho:#C0392B}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:var(--preto);color:var(--creme);min-height:100vh}
+  nav{background:rgba(13,13,13,.95);border-bottom:1px solid rgba(201,168,76,.3);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);flex-wrap:wrap;gap:8px}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;letter-spacing:-1px;color:var(--ouro);display:flex;align-items:center;gap:6px}
+  .nav-links{display:flex;gap:4px;flex-wrap:wrap}
+  .nav-links button{background:transparent;border:none;color:var(--cinza);padding:8px 12px;cursor:pointer;font-weight:500;font-size:14px;border-radius:6px;transition:.2s}
+  .nav-links button.active,.nav-links button:hover{color:var(--ouro);background:rgba(201,168,76,.1)}
+  .container{max-width:1100px;margin:24px auto;padding:0 16px;display:none}
+  .container.active{display:block}
+  h1,h2,h3{font-family:'Syne',sans-serif;font-weight:700;margin-bottom:16px}
+  p{color:var(--cinza);line-height:1.6;margin-bottom:16px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media(max-width:768px){.grid{grid-template-columns:1fr}}
+  .card{background:#141414;border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:24px;margin-bottom:24px}
+  .form-group{margin-bottom:16px}
+  label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--cinza);margin-bottom:6px;font-weight:600}
+  input,select,textarea{width:100%;background:#1A1A1A;border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:12px;color:#fff;font-family:inherit;font-size:15px;transition:.2s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ouro);background:#222}
+  .btn{background:var(--ouro);color:var(--preto);border:none;padding:12px 24px;border-radius:8px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s;font-size:15px}
+  .btn:hover{background:var(--ouro-claro);transform:translateY(-1px)}
+  .btn-sec{background:transparent;color:var(--ouro);border:1px solid var(--ouro);padding:12px 24px;border-radius:8px;font-weight:600;cursor:pointer;transition:.2s}
+  .btn-sec:hover{background:rgba(201,168,76,.1)}
+  .btn-danger{background:var(--vermelho);color:#fff}
+  .badge{display:inline-block;padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase}
+  .badge-sucesso{background:rgba(42,122,75,.2);color:#5DBF84}
+  .badge-alerta{background:rgba(243,156,18,.2);color:#F39C12}
+  .badge-perigo{background:rgba(192,57,43,.2);color:#E87B71}
+  .res-num{font-size:24px;font-family:'Syne',sans-serif;font-weight:700;color:var(--ouro);margin-top:4px}
+  .toggle-group{display:flex;background:#1A1A1A;border-radius:8px;padding:4px;margin-bottom:16px}
+  .toggle-group button{flex:1;background:transparent;border:none;color:var(--cinza);padding:8px;cursor:pointer;border-radius:6px;font-weight:500;font-size:13px}
+  .toggle-group button.active{background:var(--ouro);color:var(--preto)}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.05);font-size:14px}
+  th{color:var(--cinza);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:1px}
+  tr.melhor{background:rgba(42,122,75,.15);border-left:3px solid #5DBF84}
+  .imovel-card{background:#141414;border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:20px;margin-bottom:12px;cursor:pointer;transition:.2s;display:flex;justify-content:between;align-items:center;position:relative}
+  .imovel-card:hover{border-color:var(--ouro);background:#1A1A1A}
+  .backup-actions{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+  .backup-actions input[type="file"]{display:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⚖️ ARREMATE PRO</div>
+  <div class="nav-links">
+    <button class="active" onclick="setTab('viabilidade')">Viabilidade</button>
+    <button onclick="setTab('financiamento')">Financiamento</button>
+    <button onclick="setTab('avaliador')">Avaliador de Risco</button>
+    <button onclick="setTab('imoveis')">Meus Imóveis</button>
+    <button onclick="setTab('glossario')">Glossário</button>
+  </div>
+</nav>
+
+<div id="viabilidade" class="container active">
+  <div class="grid">
+    <div>
+      <h2>Cálculo de Viabilidade Geral</h2>
+      <p>Descubra o potencial de lucro de um leilão considerando todos os custos ocultos.</p>
+      <div class="card">
+        <div class="form-group"><label>Valor de Mercado do Imóvel (R$)</label><input type="number" id="c-mercado" placeholder="300000" oninput="calcular()"></div>
+        <div class="form-group"><label>Lance Máximo/Arremate Estimado (R$)</label><input type="number" id="c-arremate" placeholder="150000" oninput="calcular()"></div>
+        <div class="form-group"><label>Comissão do Leiloeiro (%)</label><input type="number" id="c-leiloeiro" value="5" oninput="calcular()"></div>
+        <div class="form-group"><label>ITBI (%)</label><input type="number" id="c-itbi" value="3" oninput="calcular()"></div>
+        <div class="form-group"><label>Gastos com Registro e Escritura (R$)</label><input type="number" id="c-registro" value="4000" oninput="calcular()"></div>
+        <div class="form-group"><label>Dívidas Anteriores (IPTU/Condomínio) (R$)</label><input type="number" id="c-dividas" value="0" oninput="calcular()"></div>
+        <div class="form-group"><label>Reformas Estimadas (R$)</label><input type="number" id="c-reforma" value="0" oninput="calcular()"></div>
+        <div class="form-group"><label>Despesas Jurídicas / Desocupação (R$)</label><input type="number" id="c-juridico" value="2000" oninput="calcular()"></div>
+        <div class="form-group"><label>Valor Esperado de Venda (R$)</label><input type="number" id="c-venda" placeholder="260000" oninput="calcular()"></div>
+      </div>
+    </div>
+    <div>
+      <h2>Resultado Analítico</h2>
+      <div class="card" style="border-color:var(--ouro)">
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+          <div><label>Custo Total Operação</label><div class="res-num" id="r-custo-total" style="color:#fff">R$ 0,00</div></div>
+          <div><label>Margem de Desconto</label><div class="res-num" id="r-desconto">0.0%</div></div>
+        </div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.05);margin:20px 0">
+        <div class="form-group"><label>Lucro Líquido Estimado</label><div class="res-num" id="r-lucro" style="font-size:32px;color:#5DBF84">R$ 0,00</div></div>
+        <div class="form-group"><label>Retorno sobre Investimento (ROI)</label><div class="res-num" id="r-roi" style="font-size:32px">0.0%</div></div>
+      </div>
+      <div class="card">
+        <h3>Salvar Análise</h3>
+        <div class="form-group"><label>Título ou Endereço do Imóvel</label><input type="text" id="salvar-titulo" placeholder="Ex: Apto 32 - Bloco B - Centro"></div>
+        <button class="btn" onclick="salvarImovel()">💾 Salvar em Meus Imóveis</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="financiamento" class="container">
+  <div class="grid">
+    <div>
+      <h2>Simulação de Alavancagem Comercial</h2>
+      <p>Simule cenários e descubra o ROI exato caso opte por financiar a arrematação.</p>
+      <div class="card">
+        <div class="form-group"><label>Sistema de Amortização</label><div class="toggle-group"><button class="active" id="btn-price" onclick="setTipoFin('PRICE')">PRICE</button><button id="btn-sac" onclick="setTipoFin('SAC')">SAC</button></div></div>
+        <div class="form-group"><label>Valor de Mercado Atual (R$)</label><input type="number" id="f-mercado" value="300000" oninput="calcFin()"></div>
+        <div class="form-group"><label>Valor do Arremate (R$)</label><input type="number" id="f-arremate" value="150000" oninput="calcFin()"></div>
+        <div class="form-group"><label>Percentual de Entrada (<span id="f-entrada-pct">30</span>%)</label><input type="range" id="f-entrada-range" min="10" max="90" value="30" style="accent-color:var(--ouro)" oninput="document.getElementById('f-entrada-pct').textContent=this.value;calcFin()"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--cinza);margin-top:4px"><span id="f-entrada-val">R$ 0</span><span id="f-fin-val">R$ 0</span></div></div>
+        <div class="form-group"><label>Taxa de Juros Anual (%)</label><input type="number" id="f-taxa" value="9.5" step="0.1" oninput="calcFin()"></div>
+        <div class="form-group"><label>Prazo Total (Meses)</label><input type="number" id="f-prazo" value="240" oninput="calcFin()"></div>
+        <div class="form-group"><label>Valorização Anual Estimada do Imóvel (%)</label><input type="number" id="f-valorizacao" value="5" step="0.5" oninput="calcFin()"></div>
+        <div class="form-group"><label>Custos Extras à Vista (ITBI, Reforma, Escritura) (R$)</label><input type="number" id="f-custos" value="15000" oninput="calcFin()"></div>
+      </div>
+    </div>
+    <div>
+      <h2>Resultados do Cenário Financeiro</h2>
+      <div class="card">
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+          <div><label>Entrada Requerida</label><div id="fr-entrada" style="font-weight:600">R$ 0,00</div></div>
+          <div><label>Valor Financiado</label><div id="fr-financiado" style="font-weight:600">R$ 0,00</div></div>
+          <div><label>Primeira Parcela</label><div id="fr-parcela1" style="font-weight:600">R$ 0,00</div></div>
+          <div><label>Última Parcela</label><div id="fr-parcela-ult" style="font-weight:600">R$ 0,00</div></div>
+          <div><label>Desconto Inicial</label><div id="fr-desconto-pct" style="color:#5DBF84;font-weight:600">0%</div></div>
+          <div><label>Total Caixa Inicial</label><div id="fr-custo-total" style="color:var(--ouro);font-weight:600">R$ 0,00</div></div>
+        </div>
+        <p style="font-size:12px" id="fin-recomendacao"></p>
+      </div>
+      <div class="card" style="padding:12px;overflow-x:auto" id="fin-resultado">
+        <h3>Evolução de Retorno por Período de Venda</h3>
+        <table>
+          <thead><tr><th>Período</th><th>Valor Imóvel</th><th>Dívida Banco</th><th>Lucro Líq.</th><th>ROI</th></tr></thead>
+          <tbody id="roi-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="avaliador" class="container">
+  <h2>Avaliador Técnico de Risco Ocupacional e Jurídico</h2>
+  <p>Responda aos critérios abaixo para analisar o nível de segurança jurídica da operação.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="form-group">
+        <label>Situação de Ocupação do Bem</label>
+        <select id="a-ocupacao" onchange="avaliarRisco()">
+          <option value="desocupado">Totalmente Desocupado / Vazio</option>
+          <option value="ocupado-prop">Ocupado pelo Antigo Proprietário</option>
+          <option value="ocupado-inquilino">Ocupado por Inquilino com Contrato</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tipo de Leilão / Origem Jurídica</label>
+        <select id="a-tipo" onchange="avaliarRisco()">
+          <option value="extra">Extrajudicial (Alienação Fiduciária - Banco)</option>
+          <option value="judicial-civel">Judicial Cível (Dívida de Condomínio/Cobrança)</option>
+          <option value="judicial-trabalhista">Judicial Trabalhista ou Execução Fiscal</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Análise Qualitativa da Matrícula</label>
+        <select id="a-matricula" onchange="avaliarRisco()">
+          <option value="limpa">Matrícula Sem Ônus Adicionais Pendentes</option>
+          <option value="multiplas">Constam Múltiplas Penhoras / Indisponibilidades</option>
+          <option value="usuario">Consta Usufruto Vitalício Ativo</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Processos de Contestação do Devedor</label>
+        <select id="a-processos" onchange="avaliarRisco()">
+          <option value="nenhum">Nenhum processo ativo contra o leilão encontrado</option>
+          <option value="liminar-negada">Processo ativo mas com pedido liminar já negado</option>
+          <option value="ativo">Processo ativo discutindo preço vil ou falta de notificação</option>
+        </select>
+      </div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center" id="a-resultado-box">
+      <label>Classificação do Ativo</label>
+      <div id="a-badge" class="badge badge-sucesso" style="font-size:16px;padding:8px 16px;margin:12px 0">RISCO BAIXO</div>
+      <div id="a-score" style="font-size:48px;font-family:'Syne',sans-serif;font-weight:800;color:#fff">100/100</div>
+      <p id="a-desc" style="margin-top:16px;font-size:14px"></p>
+    </div>
+  </div>
+</div>
+
+<div id="imoveis" class="container">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+    <h2>Portfólio de Imóveis Analisados</h2>
+    <div class="backup-actions">
+      <button class="btn-sec" style="padding:8px 16px;font-size:13px" onclick="exportarBackup()">📤 Exportar Backup</button>
+      <button class="btn-sec" style="padding:8px 16px;font-size:13px" onclick="document.getElementById('import-file').click()">📥 Importar Backup</button>
+      <input type="file" id="import-file" accept=".json" onchange="importarBackup(event)">
+    </div>
+  </div>
+  <div id="lista-imoveis"></div>
+</div>
+
+<div id="detalhe-imovel" class="container">
+  <button class="btn-sec" onclick="setTab('imoveis')" style="margin-bottom:20px">← Voltar para a Lista</button>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <h1 id="di-titulo">Nome do Imóvel</h1>
+    <button class="btn btn-danger" id="di-btn-excluir">🗑️ Excluir permanentemente</button>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Resumo Financeiro Base</h3>
+      <table style="margin-top:16px">
+        <tr><td>Valor Mercado</td><td id="di-mercado">R$ 0</td></tr>
+        <tr><td>Lance Planejado</td><td id="di-arremate">R$ 0</td></tr>
+        <tr><td>Custos Operacionais Extra</td><td id="di-custos">R$ 0</td></tr>
+        <tr><td>Lucro Esperado</td><td id="di-lucro" style="font-weight:600;color:#5DBF84">R$ 0</td></tr>
+        <tr><td>ROI Real da Operação</td><td id="di-roi" style="font-weight:600">0%</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Diligência Adicional de Risco</h3>
+      <div class="form-group" style="margin-top:12px">
+        <label>Situação Fática</label>
+        <select id="di-a-ocupacao" onchange="atualizarRiscoImovel()"></select>
+      </div>
+      <div class="form-group">
+        <label>Origem do Título</label>
+        <select id="di-a-tipo" onchange="atualizarRiscoImovel()"></select>
+      </div>
+      <div class="form-group">
+        <label>Gravames Gravados</label>
+        <select id="di-a-matricula" onchange="atualizarRiscoImovel()"></select>
+      </div>
+      <div class="form-group">
+        <label>Ações Judiciais</label>
+        <select id="di-a-processos" onchange="atualizarRiscoImovel()"></select>
+      </div>
+      <div style="background:#1A1A1A;padding:16px;border-radius:8px;text-align:center;margin-top:16px">
+        <div id="di-badge" class="badge badge-sucesso">RISCO BAIXO</div>
+        <div id="di-score" style="font-size:28px;font-weight:700;margin-top:6px;color:#fff">100/100</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="glossario" class="container">
+  <h2>Dicionário de Termos de Leilão</h2>
+  <p>Consulte rapidamente termos jurídicos e financeiros comuns no mercado de arrematação.</p>
+  <div id="glossario-lista"></div>
+</div>
+
+<script>
+let tipoFin = 'PRICE';
+let listaImoveis = [];
+let imovelAtualId = null;
+
+function setTab(tabId) {
+  document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
+  
+  const btnIdx = {viabilidade:0, financiamento:1, avaliador:2, imoveis:3, glossario:4}[tabId];
+  if(btnIdx !== undefined) {
+    const btn = document.querySelectorAll('.nav-links button')[btnIdx];
+    if(btn) btn.classList.add('active');
+  }
+
+  if(tabId === 'imoveis') listarImoveis();
+  if(tabId === 'avaliador') avaliarRisco();
+}
+
+function fNum(v) {
+  return v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function setTipoFin(tipo) {
+  tipoFin = tipo;
+  document.getElementById('btn-price').classList.toggle('active', tipo==='PRICE');
+  document.getElementById('btn-sac').classList.toggle('active', tipo==='SAC');
+  calcFin();
+}
+
+function calcular() {
+  const mercado = parseFloat(document.getElementById('c-mercado').value) || 0;
+  const arremate = parseFloat(document.getElementById('c-arremate').value) || 0;
+  const leiloeiro = parseFloat(document.getElementById('c-leiloeiro').value) || 5;
+  const itbi = parseFloat(document.getElementById('c-itbi').value) || 3;
+  const registro = parseFloat(document.getElementById('c-registro').value) || 0;
+  const dividas = parseFloat(document.getElementById('c-dividas').value) || 0;
+  const reforma = parseFloat(document.getElementById('c-reforma').value) || 0;
+  const juridico = parseFloat(document.getElementById('c-juridico').value) || 0;
+  const venda = parseFloat(document.getElementById('c-venda').value) || 0;
+
+  const cLeiloeiro = arremate * (leiloeiro / 100);
+  const cItbi = arremate * (itbi / 100);
+  const custoTotal = arremate + cLeiloeiro + cItbi + registro + dividas + reforma + juridico;
+  
+  const lucro = venda - custoTotal;
+  const roi = custoTotal > 0 ? (lucro / custoTotal * 100) : 0;
+  const desconto = mercado > 0 ? ((mercado - arremate) / mercado * 100) : 0;
+
+  document.getElementById('r-custo-total').textContent = 'R$ ' + fNum(custoTotal);
+  document.getElementById('r-desconto').textContent = desconto.toFixed(1) + '%';
+  
+  const elLucro = document.getElementById('r-lucro');
+  elLucro.textContent = 'R$ ' + fNum(lucro);
+  elLucro.style.color = lucro >= 0 ? '#5DBF84' : '#E87B71';
+  
+  const elRoi = document.getElementById('r-roi');
+  elRoi.textContent = roi.toFixed(1) + '%';
+  elRoi.style.color = roi >= 25 ? '#5DBF84' : roi >= 12 ? 'var(--ouro)' : '#E87B71';
+  
+  return { mercado, arremate, custoTotal, lucro, roi, custosExtras: custoTotal - arremate };
+}
+
+function calcFin(){
+  const mercado=parseFloat(document.getElementById('f-mercado').value)||0;
+  const arremate=parseFloat(document.getElementById('f-arremate').value)||0;
+  const pct=parseInt(document.getElementById('f-entrada-range').value)||30;
+  const taxaAno=parseFloat(document.getElementById('f-taxa').value)||9.8;
+  const prazo=parseInt(document.getElementById('f-prazo').value)||240;
+  const valAno=parseFloat(document.getElementById('f-valorizacao').value)||5;
+  const custos=parseFloat(document.getElementById('f-custos').value)||0;
+  if(arremate===0)return;
+  
+  const entrada=arremate*(pct/100),financiado=arremate-entrada;
+  const taxaMes=taxaAno/100/12,valMes=Math.pow(1+valAno/100,1/12)-1;
+  const descPct=mercado>0?((mercado-arremate)/mercado*100):0;
+  let p1=0,pUlt=0;
+  
+  if(tipoFin==='PRICE'){
+    p1=taxaMes>0?financiado*(taxaMes*Math.pow(1+taxaMes,prazo))/(Math.
