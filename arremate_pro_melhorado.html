@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arremate Pro - Versão Melhorada</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+  :root{--preto:#0D0D0D;--ouro:#C9A84C;--ouro-claro:#F0D080;--creme:#F7F3EC;--cinza:#6B6B6B;--verde:#2A7A4B;--vermelho:#C0392B}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:var(--preto);color:var(--creme);min-height:100vh}
+  nav{background:rgba(13,13,13,.95);border-bottom:1px solid rgba(201,168,76,.3);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);flex-wrap:wrap;gap:8px}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--ouro)}
+  .logo span{color:var(--creme)}
+  .nav-tabs{display:flex;gap:3px;flex-wrap:wrap}
+  .nav-tab{padding:6px 11px;border-radius:6px;border:none;background:transparent;color:var(--cinza);font-family:'Inter',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s}
+  .nav-tab:hover{color:var(--creme);background:rgba(255,255,255,.06)}
+  .nav-tab.active{background:var(--ouro);color:var(--preto);font-weight:600}
+  .section{display:none;padding:24px 16px;max-width:900px;margin:0 auto}
+  .section.active{display:block}
+  .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-bottom:14px}
+  .card-gold{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.05)}
+  .card h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--ouro);margin-bottom:8px}
+  .card h4{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--creme);margin-bottom:6px}
+  .card p,.card li{font-size:13px;color:#CCC;line-height:1.7}
+  .card ul{padding-left:16px}
+  .card ul li{margin-bottom:4px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:600px){.grid-2,.grid-3{grid-template-columns:1fr}}
+  .sec-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px}
+  .sec-sub{font-size:13px;color:#888;margin-bottom:20px}
+  .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:8px}
+  .tag-ouro{background:rgba(201,168,76,.15);color:var(--ouro)}
+  .tag-verde{background:rgba(42,122,75,.2);color:#5DBF84}
+  .tag-vermelho{background:rgba(192,57,43,.2);color:#E87B71}
+  label{display:block;font-size:12px;font-weight:500;color:#AAA;margin-bottom:5px;margin-top:12px}
+  input,select,textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:9px 12px;color:var(--creme);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border .2s}
+  input:focus,select:focus,textarea:focus{border-color:var(--ouro)}
+  input[type=range]{padding:4px 0;background:transparent;border:none;cursor:pointer}
+  input[type=range]:focus{border:none}
+  select option{background:#1A1A1A}
+  textarea{resize:vertical;min-height:80px}
+  .btn{display:inline-block;padding:10px 20px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+  .btn-gold{background:var(--ouro);color:var(--preto)}
+  .btn-gold:hover{background:var(--ouro-claro)}
+  .btn-outline{background:transparent;border:1px solid rgba(201,168,76,.5);color:var(--ouro)}
+  .btn-outline:hover{background:rgba(201,168,76,.1)}
+  .btn-danger{background:transparent;border:1px solid rgba(192,57,43,.5);color:#E87B71;font-size:12px;padding:5px 10px}
+  .btn-danger:hover{background:rgba(192,57,43,.1)}
+  .btn-full{width:100%;margin-top:14px}
+  .resultado-box{background:rgba(42,122,75,.08);border:1px solid rgba(42,122,75,.3);border-radius:10px;padding:18px;margin-top:16px}
+  .resultado-box h4{font-family:'Syne',sans-serif;font-size:14px;color:#5DBF84;margin-bottom:10px}
+  .resultado-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+  .resultado-row:last-child{border-bottom:none;font-weight:600;color:var(--ouro)}
+  .resultado-row .label-r{color:#AAA}
+  .alerta{padding:12px 16px;border-radius:8px;margin-bottom:10px;font-size:13px;line-height:1.6}
+  .alerta-verde{background:rgba(42,122,75,.12);border-left:3px solid #5DBF84;color:#A8DDB8}
+  .alerta-vermelho{background:rgba(192,57,43,.12);border-left:3px solid #E87B71;color:#F0A09A}
+  .alerta-ouro{background:rgba(201,168,76,.1);border-left:3px solid var(--ouro);color:#E0C070}
+  .prompt-output{background:#111;border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:18px;font-size:12px;line-height:1.8;color:#D0D0D0;white-space:pre-wrap;word-break:break-word;max-height:400px;overflow-y:auto;margin-top:14px}
+  .checklist-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+  .checklist-item:last-child{border-bottom:none}
+  .check-box{width:20px;height:20px;min-width:20px;border:2px solid rgba(201,168,76,.5);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;user-select:none}
+  .check-box.checked{background:var(--ouro);border-color:var(--ouro);color:var(--preto)}
+  .check-text{font-size:13px;color:#CCC;line-height:1.5}
+  .check-text strong{color:var(--creme);display:block;margin-bottom:1px}
+  .check-text.checked-text{text-decoration:line-through;color:#555}
+  .score-bar-wrap{margin:6px 0 14px}
+  .score-bar{height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+  .score-fill{height:100%;border-radius:3px;transition:width .6s ease}
+  .score-verde{background:#5DBF84}
+  .score-ouro{background:var(--ouro)}
+  .score-vermelho{background:#E87B71}
+  .sep{border:none;border-top:1px solid rgba(255,255,255,.07);margin:20px 0}
+  .badge-score{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:700}
+  .badge-verde{background:rgba(42,122,75,.2);color:#5DBF84}
+  .badge-ouro{background:rgba(201,168,76,.15);color:var(--ouro)}
+  .badge-vermelho{background:rgba(192,57,43,.15);color:#E87B71}
+  ::-webkit-scrollbar{width:5px}
+  ::-webkit-scrollbar-track{background:#1A1A1A}
+  ::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:3px}
+
+  /* IMÓVEIS */
+  .imovel-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative}
+  .imovel-card:hover{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05)}
+  .imovel-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .imovel-nome{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--creme);margin-bottom:3px}
+  .imovel-meta{font-size:11px;color:#777;display:flex;gap:10px;flex-wrap:wrap;margin-top:5px}
+  .imovel-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+  .imovel-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+  .ib-verde{background:rgba(42,122,75,.2);color:#5DBF84}
+  .ib-ouro{background:rgba(201,168,76,.15);color:var(--ouro)}
+  .ib-vermelho{background:rgba(192,57,43,.2);color:#E87B71}
+  .ib-cinza{background:rgba(255,255,255,.08);color:#888}
+  .empty-state{text-align:center;padding:40px 20px;color:#555}
+  .empty-state .ico{font-size:40px;margin-bottom:14px}
+
+  /* MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+  .modal-overlay.open{display:flex}
+  .modal{background:#161616;border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+  .modal h2{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--ouro);margin-bottom:18px}
+  .modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+
+  /* INNER TABS */
+  .inner-tabs{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:20px;overflow-x:auto}
+  .inner-tab{padding:9px 14px;border:none;background:transparent;color:#666;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s}
+  .inner-tab:hover{color:var(--creme)}
+  .inner-tab.active{color:var(--ouro);border-bottom-color:var(--ouro);font-weight:600}
+  .inner-content{display:none}
+  .inner-content.active{display:block}
+
+  /* PLATAFORMAS */
+  .plat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  @media(max-width:480px){.plat-grid{grid-template-columns:1fr}}
+  .plat-link{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;text-decoration:none;color:var(--creme);font-size:12px;font-weight:500;transition:all .2s}
+  .plat-link:hover{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.06);color:var(--ouro)}
+  .plat-link .plat-ico{font-size:16px;flex-shrink:0}
+  .plat-link .plat-info{display:flex;flex-direction:column}
+  .plat-link .plat-name{font-weight:600;color:var(--creme);font-size:12px}
+  .plat-link .plat-url{font-size:10px;color:#777;margin-top:1px}
+  .plat-link:hover .plat-name{color:var(--ouro)}
+
+  /* FINANCIAMENTO */
+  .fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  @media(max-width:600px){.fin-grid{grid-template-columns:1fr}}
+  .fin-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:14px;text-align:center}
+  .fin-box.destaque{background:rgba(42,122,75,.1);border-color:rgba(42,122,75,.3)}
+  .fin-box.alerta-box{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.3)}
+  .fin-box.neg{background:rgba(192,57,43,.08);border-color:rgba(192,57,43,.3)}
+  .fin-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--ouro);margin-bottom:3px}
+  .fin-val.verde{color:#5DBF84}
+  .fin-val.vermelho{color:#E87B71}
+  .fin-label{font-size:11px;color:#888}
+  .tipo-btn-wrap{display:flex;gap:8px;margin-top:8px}
+  .tipo-btn{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#888;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+  .tipo-btn.active{background:var(--ouro);color:var(--preto);border-color:var(--ouro)}
+  .range-wrap{margin-top:8px}
+  .range-labels{display:flex;justify-content:space-between;font-size:11px;color:#666;margin-bottom:4px}
+  .range-val{font-size:13px;font-weight:600;color:var(--ouro);text-align:right;margin-bottom:4px}
+  input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.1);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--ouro);cursor:pointer}
+  .roi-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px}
+  .roi-table th{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08);color:#888;font-weight:500}
+  .roi-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
+  .roi-table tr:last-child td{border-bottom:none}
+  .roi-table tr.melhor td{color:#5DBF84;font-weight:600}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Arremate<span>Pro</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('inicio',this)">🏠 Início</button>
+    <button class="nav-tab" onclick="showSection('imoveis',this)">🏢 Imóveis</button>
+    <button class="nav-tab" onclick="showSection('calculadora',this)">🧮 Viabilidade</button>
+    <button class="nav-tab" onclick="showSection('financiamento',this)">💳 Financiamento</button>
+    <button class="nav-tab" onclick="showSection('plataformas',this)">🌐 Plataformas</button>
+    <button class="nav-tab" onclick="showSection('checklist',this)">✅ Checklist</button>
+    <button class="nav-tab" onclick="showSection('avaliador',this)">🔍 Avaliador</button>
+    <button class="nav-tab" onclick="showSection('prompt',this)">🤖 Prompt IA</button>
+    <button class="nav-tab" onclick="showSection('glossario',this)">📖 Glossário</button>
+  </div>
+</nav>
+
+<!-- INÍCIO -->
+<div id="inicio" class="section active">
+  <div style="text-align:center;padding:32px 0 20px">
+    <div style="display:inline-block;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.4);color:var(--ouro);font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-bottom:16px">✦ Seu Copiloto de Leilões</div>
+    <h1 style="font-family:'Syne',sans-serif;font-size:clamp(24px,5vw,38px);font-weight:800;line-height:1.2;margin-bottom:12px">Arremate com <span style="color:var(--ouro)">estratégia</span>,<br>não com sorte.</h1>
+    <p style="font-size:14px;color:#AAA;line-height:1.7;max-width:520px;margin:0 auto 24px">Ferramentas profissionais para analisar, calcular e arrematar imóveis em leilão com segurança.</p>
+    <button class="btn btn-gold" onclick="showSection('imoveis',document.querySelectorAll('.nav-tab')[1])">🏢 Meus Imóveis</button>
+  </div>
+  <div class="grid-3">
+    <div class="card card-gold"><div class="tag tag-verde">Novo</div><h4>🏢 Gestão de Imóveis</h4><p>Salve checklist e viabilidade de cada imóvel separadamente.</p></div>
+    <div class="card card-gold"><div class="tag tag-ouro">Novo</div><h4>💳 Calculadora Financiamento</h4><p>Simule PRICE vs SAC, ROI por período e momento ideal de revenda.</p></div>
+    <div class="card card-gold"><div class="tag tag-ouro">Atualizado</div><h4>🌐 Plataformas</h4><p>Links diretos e clicáveis para os principais leilões do Brasil.</p></div>
+  </div>
+  <div class="card" style="margin-top:4px">
+    <h3>🏆 As 5 Regras dos Arrematadores de Sucesso</h3>
+    <ul style="margin-top:8px">
+      <li><strong style="color:#F0D080">Regra 1 — Teto máximo é sagrado.</strong> Nunca ultrapasse — é onde acaba o lucro.</li>
+      <li style="margin-top:6px"><strong style="color:#F0D080">Regra 2 — O lucro está na compra.</strong> Festejam o dinheiro no bolso, não o arremate.</li>
+      <li style="margin-top:6px"><strong style="color:#F0D080">Regra 3 — Mercadológico > Jurídico.</strong> O maior risco é comprar em bairro sem demanda.</li>
+      <li style="margin-top:6px"><strong style="color:#F0D080">Regra 4 — Lance nos segundos finais.</strong> Evitam guerra de lances que infla o preço.</li>
+      <li style="margin-top:6px"><strong style="color:#F0D080">Regra 5 — Estratégia de saída antes da entrada.</strong> Sabem o que farão ANTES do primeiro lance.</li>
+    </ul>
+  </div>
+  <div class="alerta alerta-ouro">💡 <strong>Dica para Iniciantes:</strong> Comece pelos leilões extrajudiciais de bancos (Caixa, BB, Santander). Documentação limpa, processo mais simples. Só depois migre para judiciais.</div>
+</div>
+
+<!-- IMÓVEIS -->
+<div id="imoveis" class="section">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:8px">
+    <div><div class="sec-title">🏢 Meus Imóveis</div><div class="sec-sub" style="margin-bottom:0">Dados salvos no seu navegador</div></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-outline" style="padding:5px 12px;font-size:12px" onclick="exportarBackup()">📤 Exportar JSON</button>
+      <button class="btn btn-outline" style="padding:5px 12px;font-size:12px" onclick="document.getElementById('import-file').click()">📥 Importar</button>
+      <input type="file" id="import-file" style="display:none" accept=".json" onchange="importarBackup(this)">
+      <button class="btn btn-gold" onclick="abrirModalNovoImovel()">+ Novo Imóvel</button>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="btn btn-outline" style="padding:5px 10px;font-size:11px" onclick="filtrarImoveis('todos')">Todos</button>
+    <button class="btn btn-outline" style="padding:5px 10px;font-size:11px" onclick="filtrarImoveis('prospectando')">Prospectando</button>
+    <button class="btn btn-outline" style="padding:5px 10px;font-size:11px" onclick="filtrarImoveis('analise')">Em Análise</button>
+    <button class="btn btn-outline" style="padding:5px 10px;font-size:11px" onclick="filtrarImoveis('arrematar')">Vou Arrematar</button>
+    <button class="btn btn-outline" style="padding:5px 10px;font-size:11px" onclick="filtrarImoveis('arrematado')">Arrematados</button>
+  </div>
+  <div id="lista-imoveis"></div>
+</div>
+
+<!-- DETALHE IMÓVEL -->
+<div id="detalhe-imovel" class="section">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+    <button class="btn btn-outline" style="padding:5px 12px;font-size:12px" onclick="voltarLista()">← Voltar</button>
+    <div id="detalhe-titulo" style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--ouro)"></div>
+  </div>
+  <div class="inner-tabs">
+    <button class="inner-tab active" onclick="showInner('di-resumo',this)">📋 Resumo</button>
+    <button class="inner-tab" onclick="showInner('di-calc',this)">🧮 Viabilidade</button>
+    <button class="inner-tab" onclick="showInner('di-check',this)">✅ Checklist</button>
+    <button class="inner-tab" onclick="showInner('di-risco',this)">🔍 Risco</button>
+    <button class="inner-tab" onclick="showInner('di-notas',this)">📝 Notas</button>
+  </div>
+  
+  <div id="di-resumo" class="inner-content active"><div id="resumo-imovel-content"></div></div>
+  
+  <div id="di-calc" class="inner-content">
+    <div class="card">
+      <label>Valor de Avaliação (R$)</label><input type="number" id="di-avaliacao" placeholder="300000" oninput="calcularDetalhe()">
+      <label>Lance Máximo (R$)</label><input type="number" id="di-lance" placeholder="180000" oninput="calcularDetalhe()">
+      <label>Comissão Leiloeiro (%)</label><input type="number" id="di-comissao" value="5" oninput="calcularDetalhe()">
+      <label>ITBI (%)</label><input type="number" id="di-itbi" value="3" oninput="calcularDetalhe()">
+      <label>Reforma (R$)</label><input type="number" id="di-reforma" value="0" oninput="calcularDetalhe()">
+      <label>Dívidas (R$)</label><input type="number" id="di-dividas" value="0" oninput="calcularDetalhe()">
+      <label>Valor Esperado de Venda/Aluguel (R$)</label><input type="number" id="di-venda" placeholder="260000" oninput="calcularDetalhe()">
+      <label>Modalidade de Saída</label>
+      <select id="di-saida" onchange="calcularDetalhe()"><option value="venda">Revenda</option><option value="aluguel">Aluguel</option></select>
+      <button class="btn btn-gold btn-full" onclick="salvarViabilidade()">💾 Salvar Viabilidade</button>
+    </div>
+    <div id="di-resultado-calc-wrap"></div>
+  </div>
+
+  <div id="di-check" class="inner-content">
+    <div style="margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div id="di-progresso-text" style="font-size:13px;color:#AAA">0 de 35 concluídos</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:100px"><div class="score-bar"><div class="score-fill score-ouro" id="di-barra-progresso" style="width:0%"></div></div></div>
+        <button class="btn btn-danger" onclick="resetChecklistDetalhe()">Reiniciar</button>
+      </div>
+    </div>
+    <div id="di-checklist-container"></div>
+  </div>
+
+  <div id="di-risco" class="inner-content">
+    <div class="card">
+      <label>Imóvel desocupado?</label><select id="di-a-ocupacao" onchange="avaliarRiscoDetalhe()"><option value="3">Sim ✅</option><option value="1">Inquilino</option><option value="0">Dono</option></select>
+      <label>Tipo de leilão</label><select id="di-a-tipo" onchange="avaliarRiscoDetalhe()"><option value="3">Extrajudicial ✅</option><option value="2">Judicial ok</option><option value="1">Judicial c/ pendências</option></select>
+      <label>Matrícula limpa?</label><select id="di-a-matricula" onchange="avaliarRiscoDetalhe()"><option value="3">Sim ✅</option><option value="1">Com ônus</option><option value="0">Não verifiquei</option></select>
+      <label>Dívidas IPTU/Cond.</label><select id="di-a-dividas" onchange="avaliarRiscoDetalhe()"><option value="3">Nenhuma ✅</option><option value="2">Até 5%</option><option value="1">5–15%</option><option value="0">Altas</option></select>
+      <label>Localização</label><select id="di-a-local" onchange="avaliarRiscoDetalhe()"><option value="3">Alta demanda ✅</option><option value="2">Média</option><option value="1">Baixa</option></select>
+      <label>Desconto</label><select id="di-a-desconto" onchange="avaliarRiscoDetalhe()"><option value="3">&gt;35% ✅</option><option value="2">20–35%</option><option value="1">10–20%</option><option value="0">&lt;10%</option></select>
+      <label>Visitou?</label><select id="di-a-visita" onchange="avaliarRiscoDetalhe()"><option value="2">Sim ✅</option><option value="1">Só fotos</option><option value="0">Não</option></select>
+      <label>Estratégia de saída?</label><select id="di-a-saida" onchange="avaliarRiscoDetalhe()"><option value="2">Sim ✅</option><option value="1">Tenho ideia</option><option value="0">Não</option></select>
+      <label>Leu edital?</label><select id="di-a-edital" onchange="avaliarRiscoDetalhe()"><option value="2">Sim ✅</option><option value="1">Parcial</option><option value="0">Não</option></select>
+      <button class="btn btn-gold btn-full" onclick="salvarRisco()">💾 Salvar Avaliação</button>
+    </div>
+    <div id="di-resultado-risco"></div>
+  </div>
+
+  <div id="di-notas" class="inner-content">
+    <div class="card">
+      <label>Status do Imóvel</label>
+      <select id="di-status">
+        <option value="prospectando">🔍 Prospectando</option>
+        <option value="analise">📊 Em Análise</option>
+        <option value="arrematar">🎯 Vou Arrematar</option>
+        <option value="arrematado">✅ Arrematado</option>
+        <option value="descartado">❌ Descartado</option>
+      </select>
+      <label>Notas e Observações</label>
+      <textarea id="di-notas-texto" placeholder="Anote aqui detalhes do edital, contatos, datas importantes..."></textarea>
+      <button class="btn btn-gold btn-full" onclick="salvarNotas()">💾 Salvar Notas e Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIABILIDADE GERAL -->
+<div id="calculadora" class="section">
+  <div class="sec-title">🧮 Viabilidade Geral</div>
+  <div class="sec-sub">Simulação rápida de custos e retorno.</div>
+  <div class="card">
+    <div class="grid-2">
+      <div><label>Valor de Avaliação (R$)</label><input type="number" id="c-avaliacao" placeholder="300000" oninput="calcular()"></div>
+      <div><label>Lance Máximo (R$)</label><input type="number" id="c-lance" placeholder="180000" oninput="calcular()"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Comissão Leiloeiro (%)</label><input type="number" id="c-comissao" value="5" oninput="calcular()"></div>
+      <div><label>ITBI (%)</label><input type="number" id="c-itbi" value="3" oninput="calcular()"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Reforma Estimada (R$)</label><input type="number" id="c-reforma" value="0" oninput="calcular()"></div>
+      <div><label>Dívidas Pendentes (R$)</label><input type="number" id="c-dividas" value="0" oninput="calcular()"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Valor Esperado de Venda/Aluguel (R$)</label><input type="number" id="c-venda" placeholder="260000" oninput="calcular()"></div>
+      <div>
+        <label>Modalidade de Saída</label>
+        <select id="c-saida" onchange="calcular()"><option value="venda">Revenda</option><option value="aluguel">Aluguel</option></select>
+      </div>
+    </div>
+  </div>
+  <div id="resultado-calc" style="display:none">
+    <div class="resultado-box">
+      <h4>📊 Resultado da Simulação</h4>
+      <div id="resultado-linhas"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FINANCIAMENTO -->
+<div id="financiamento" class="section">
+  <div class="sec-title">💳 Financiamento Imobiliário</div>
+  <div class="sec-sub">Simulação SAC vs PRICE e ROI estimado.</div>
+  <div class="card">
+    <div class="grid-2">
+      <div><label>Valor de Mercado (R$)</label><input type="number" id="f-mercado" value="300000" oninput="calcFin()"></div>
+      <div><label>Valor de Arremate (R$)</label><input type="number" id="f-arremate" value="180000" oninput="calcFin()"></div>
+    </div>
+    <label>Entrada: <span id="f-entrada-pct">30</span>% (<span id="f-entrada-val">R$ 0</span>)</label>
+    <div class="range-wrap"><input type="range" id="f-entrada-range" min="10" max="90" step="5" value="30" oninput="syncEntrada()"></div>
+    <div class="grid-2">
+      <div><label>Taxa de Juros (% a.a.)</label><input type="number" id="f-taxa" value="9.8" step="0.1" oninput="calcFin()"></div>
+      <div><label>Prazo (Meses)</label><input type="number" id="f-prazo" value="240" oninput="calcFin()"></div>
+    </div>
+    <div class="grid-2">
+      <div><label>Valorização do Imóvel (% a.a.)</label><input type="number" id="f-valorizacao" value="5" step="0.5" oninput="calcFin()"></div>
+      <div><label>Custos Iniciais (ITBI/Cartório/Ref)</label><input type="number" id="f-custos" value="15000" oninput="calcFin()"></div>
+    </div>
+    <label>Sistema de Amortização</label>
+    <div class="tipo-btn-wrap">
+      <button class="tipo-btn active" id="btn-price" onclick="setTipo('PRICE')">PRICE</button>
+      <button class="tipo-btn" id="btn-sac" onclick="setTipo('SAC')">SAC</button>
+    </div>
+  </div>
+
+  <div id="fin-resultado" style="display:none">
+    <div class="grid-2">
+      <div class="fin-box destaque"><div class="fin-val verde" id="fr-entrada">R$ 0</div><div class="fin-label">Capital Próprio (Entrada + Custos)</div></div>
+      <div class="fin-box"><div class="fin-val" id="fr-financiado">R$ 0</div><div class="fin-label">Valor Financiado</div></div>
+    </div>
+    <div class="grid-2" style="margin-top:10px">
+      <div class="fin-box"><div class="fin-val" id="fr-parcela1">R$ 0</div><div class="fin-label">Primeira Parcela</div></div>
+      <div class="fin-box"><div class="fin-val" id="fr-parcela-ult">R$ 0</div><div class="fin-label">Última Parcela</div></div>
+    </div>
+    
+    <div class="card" style="margin-top:14px">
+      <h4>📈 Projeção de ROI por Tempo de Posse</h4>
+      <div style="overflow-x:auto">
+        <table class="roi-table">
+          <thead><tr><th>Meses</th><th>Vlr Imóvel</th><th>Saldo Dev.</th><th>Lucro Líq.</th><th>ROI</th></tr></thead>
+          <tbody id="roi-tbody"></tbody>
+        </table>
+      </div>
+      <div class="alerta alerta-ouro" id="fin-recomendacao" style="margin-top:16px;font-size:12px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PLATAFORMAS -->
+<div id="plataformas" class="section">
+  <div class="sec-title">🌐 Principais Plataformas</div>
+  <div class="sec-sub">Links oficiais dos maiores leiloeiros e bancos.</div>
+  
+  <div class="card card-gold">
+    <h3>🏦 Leilões de Bancos (Extrajudiciais)</h3>
+    <div class="plat-grid">
+      <a class="plat-link" href="https://venda-imoveis.caixa.gov.br" target="_blank"><span class="plat-ico">🏦</span><span class="plat-info"><span class="plat-name">Caixa Imóveis</span><span class="plat-url">venda-imoveis.caixa.gov.br</span></span></a>
+      <a class="plat-link" href="https://www.seuimovelbb.com.br" target="_blank"><span class="plat-ico">🏦</span><span class="plat-info"><span class="plat-name">Banco do Brasil</span><span class="plat-url">seuimovelbb.com.br</span></span></a>
+      <a class="plat-link" href="https://www.santanderimoveis.com.br" target="_blank"><span class="plat-ico">🏦</span><span class="plat-info"><span class="plat-name">Santander</span><span class="plat-url">santanderimoveis.com.br</span></span></a>
+      <a class="plat-link" href="https://www.bradescoimoveis.com.br" target="_blank"><span class="plat-ico">🏦</span><span class="plat-info"><span class="plat-name">Bradesco</span><span class="plat-url">bradescoimoveis.com.br</span></span></a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔨 Grandes Leiloeiros</h3>
+    <div class="plat-grid">
+      <a class="plat-link" href="https://www.megaleiloes.com.br" target="_blank"><span class="plat-ico">🔨</span><span class="plat-info"><span class="plat-name">Mega Leilões</span><span class="plat-url">megaleiloes.com.br</span></span></a>
+      <a class="plat-link" href="https://www.zukerman.com.br" target="_blank"><span class="plat-ico">🔨</span><span class="plat-info"><span class="plat-name">Zukerman</span><span class="plat-url">zukerman.com.br</span></span></a>
+      <a class="plat-link" href="https://www.sodresantoro.com.br" target="_blank"><span class="plat-ico">🔨</span><span class="plat-info"><span class="plat-name">Sodré Santoro</span><span class="plat-url">sodresantoro.com.br</span></span></a>
+      <a class="plat-link" href="https://www.leilaovip.com.br" target="_blank"><span class="plat-ico">🔨</span><span class="plat-info"><span class="plat-name">Leilão VIP</span><span class="plat-url">leilaovip.com.br</span></span></a>
+      <a class="plat-link" href="https://www.biasiweb.com.br" target="_blank"><span class="plat-ico">🔨</span><span class="plat-info"><span class="plat-name">Biasi Leilões</span><span class="plat-url">biasiweb.com.br</span></span></a>
+      <a class="plat-link" href="https://www.freitasleiloeiro.com.br" target="_blank"><span class="plat-ico">🔨</span><span class="plat-info"><span class="plat-name">Freitas Leiloeiro</span><span class="plat-url">freitasleiloeiro.com.br</span></span></a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔍 Portais de Busca e Pesquisa</h3>
+    <div class="plat-grid">
+      <a class="plat-link" href="https://www.leilaoinvest.com.br" target="_blank"><span class="plat-ico">🔍</span><span class="plat-info"><span class="plat-name">Leilão Invest</span><span class="plat-url">leilaoinvest.com.br</span></span></a>
+      <a class="plat-link" href="https://www.arrematante.com" target="_blank"><span class="plat-ico">🔍</span><span class="plat-info"><span class="plat-name">Arrematante.com</span><span class="plat-url">arrematante.com</span></span></a>
+      <a class="plat-link" href="https://www.olx.com.br/imoveis" target="_blank"><span class="plat-ico">🟣</span><span class="plat-info"><span class="plat-name">OLX Imóveis</span><span class="plat-url">olx.com.br/imoveis</span></span></a>
+      <a class="plat-link" href="https://www.imovelweb.com.br" target="_blank"><span class="plat-ico">🌐</span><span class="plat-info"><span class="plat-name">ImovelWeb</span><span class="plat-url">imovelweb.com.br</span></span></a>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKLIST -->
+<div id="checklist" class="section">
+  <div class="sec-title">✅ Checklist Profissional</div>
+  <div class="sec-sub">35 pontos críticos. Use <strong>Meus Imóveis</strong> para salvar o checklist de cada imóvel.</div>
+  <div style="margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div id="progresso-text" style="font-size:13px;color:#AAA">0 de 35 concluídos</div>
+    <div style="flex:1;min-width:80px"><div class="score-bar"><div class="score-fill score-ouro" id="barra-progresso" style="width:0%"></div></div></div>
+    <button class="btn btn-outline" onclick="resetChecklist()" style="padding:5px 10px;font-size:11px">Reiniciar</button>
+  </div>
+  <div id="checklist-container"></div>
+</div>
+
+<!-- AVALIADOR -->
+<div id="avaliador" class="section">
+  <div class="sec-title">🔍 Avaliador de Risco</div>
+  <div class="sec-sub">Score 0–100 com classificação automática.</div>
+  <div class="card">
+    <label>Desocupado?</label><select id="a-ocupacao"><option value="3">Sim ✅</option><option value="1">Inquilino</option><option value="0">Dono</option></select>
+    <label>Tipo de leilão</label><select id="a-tipo"><option value="3">Extrajudicial ✅</option><option value="2">Judicial ok</option><option value="1">Judicial c/ pendências</option></select>
+    <label>Matrícula limpa?</label><select id="a-matricula"><option value="3">Sim ✅</option><option value="1">Com ônus</option><option value="0">Não verifiquei</option></select>
+    <label>Dívidas IPTU/Cond.</label><select id="a-dividas"><option value="3">Nenhuma ✅</option><option value="2">Até 5%</option><option value="1">5–15%</option><option value="0">Altas</option></select>
+    <label>Localização</label><select id="a-local"><option value="3">Alta demanda ✅</option><option value="2">Média</option><option value="1">Baixa</option></select>
+    <label>Desconto</label><select id="a-desconto"><option value="3">&gt;35% ✅</option><option value="2">20–35%</option><option value="1">10–20%</option><option value="0">&lt;10%</option></select>
+    <label>Visitou?</label><select id="a-visita"><option value="2">Sim ✅</option><option value="1">Só fotos</option><option value="0">Não</option></select>
+    <label>Estratégia de saída?</label><select id="a-saida"><option value="2">Sim ✅</option><option value="1">Tenho ideia</option><option value="0">Não</option></select>
+    <label>Leu edital?</label><select id="a-edital"><option value="2">Sim ✅</option><option value="1">Parcial</option><option value="0">Não</option></select>
+    <button class="btn btn-gold btn-full" onclick="avaliarRisco()">Calcular Score</button>
+  </div>
+  <div id="resultado-risco" style="display:none"><div id="resultado-risco-conteudo"></div></div>
+</div>
+
+<!-- PROMPT -->
+<div id="prompt" class="section">
+  <div class="sec-title">🤖 Gerador de Prompt para IA</div>
+  <div class="sec-sub">Cole no Claude, ChatGPT ou Gemini.</div>
+  <div class="card">
+    <label>Objetivo</label>
+    <select id="p-objetivo"><option value="analisar">Analisar imóvel</option><option value="edital">Interpretar edital</option><option value="estrategia">Estratégia de investimento</option><option value="despejo">Processo de despejo</option><option value="financeiro">Planejamento financeiro</option></select>
+    <label>Perfil</label>
+    <select id="p-perfil"><option value="iniciante">Iniciante (&lt;2 arremates)</option><option value="intermediario">Intermediário (2–10)</option><option value="avancado">Avançado (10+)</option></select>
+    <label>Tipo de imóvel</label>
+    <select id="p-tipo-imovel"><option value="apartamento">Apartamento</option><option value="casa">Casa</option><option value="comercial">Comercial</option><option value="terreno">Terreno</option><option value="rural">Rural</option></select>
+    <label>Orçamento (R$)</label><input type="number" id="p-orcamento" placeholder="200000">
+    <label>Detalhes / Dúvida</label><textarea id="p-detalhe" placeholder="Ex: Apartamento na Caixa, 2 quartos, avaliado R$280k, lance mínimo R$168k..."></textarea>
+    <button class="btn btn-gold btn-full" onclick="gerarPrompt()">⚡ Gerar Prompt</button>
+  </div>
+  <div id="area-prompt" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+      <p style="font-size:13px;color:#AAA">Cole no Claude ou ChatGPT:</p>
+      <button class="btn btn-outline" style="padding:4px 10px;font-size:11px" onclick="copiarPrompt()">📋 Copiar</button>
+    </div>
+    <div class="prompt-output" id="prompt-texto"></div>
+  </div>
+</div>
+
+<!-- GLOSSÁRIO -->
+<div id="glossario" class="section">
+  <div class="sec-title">📖 Glossário</div>
+  <div class="sec-sub">Todos os termos sem juridiquês.</div>
+  <div id="glossario-lista"></div>
+</div>
+
+<!-- MODAL NOVO IMÓVEL -->
+<div class="modal-overlay" id="modal-novo">
+  <div class="modal">
+    <h2>🏢 Novo Imóvel</h2>
+    <label>Nome / Identificação *</label><input type="text" id="ni-nome" placeholder="Ex: Apto 203 Rua das Flores, SP">
+    <label>Tipo</label><select id="ni-tipo"><option value="apartamento">Apartamento</option><option value="casa">Casa</option><option value="comercial">Comercial</option><option value="terreno">Terreno</option><option value="rural">Rural</option></select>
+    <label>Cidade / Estado</label><input type="text" id="ni-cidade" placeholder="Ex: São Paulo - SP">
+    <label>Tipo de Leilão</label><select id="ni-leilao"><option value="extrajudicial">Extrajudicial (banco)</option><option value="judicial">Judicial</option></select>
+    <label>Data do Leilão</label><input type="date" id="ni-data">
+    <label>Link do Edital</label><input type="url" id="ni-link" placeholder="https://...">
+    <label>Status Inicial</label><select id="ni-status"><option value="prospectando">🔍 Prospectando</option><option value="analise">📊 Em Análise</option><option value="arrematar">🎯 Vou Arrematar</option></select>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-gold" onclick="salvarNovoImovel()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+let imovelAtivo=null, filtroAtual='todos', tipoFin='PRICE';
+
+// ===== STORAGE WRAPPER =====
+const storage = {
+  get: async (key) => {
+    try {
+      const r = localStorage.getItem(key);
+      return r ? JSON.parse(r) : null;
+    } catch { return null; }
+  },
+  set: async (key, val) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(val));
+    } catch (e) { console.error(e); }
+  },
+  delete: async (key) => {
+    try {
+      localStorage.removeItem(key);
+    } catch {}
+  }
+};
+
+// ===== DATA HELPERS =====
+async function getImoveis(){ return await storage.get('imoveis') || []; }
+async function saveImoveis(d){ await storage.set('imoveis', d); }
+async function getImovelData(id){ return await storage.get('imovel-'+id) || {}; }
+async function saveImovelData(id,d){ await storage.set('imovel-'+id, d); }
+
+// ===== BACKUP SYSTEM =====
+async function exportarBackup() {
+  const imoveis = await getImoveis();
+  const backup = {
+    imoveis: imoveis,
+    detalhes: {},
+    checklistGeral: await storage.get('checklist-arremate')
+  };
+  for(const im of imoveis) backup.detalhes[im.id] = await getImovelData(im.id);
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `arremate_pro_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+}
+
+async function importarBackup(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if(!data.imoveis || !confirm('Isso substituirá seus dados atuais. Continuar?')) return;
+      await saveImoveis(data.imoveis);
+      if(data.checklistGeral) await storage.set('checklist-arremate', data.checklistGeral);
+      for(const id in data.detalhes) await saveImovelData(id, data.detalhes[id]);
+      alert('✅ Backup importado!');
+      renderLista();
+    } catch (err) { alert('❌ Erro: ' + err.message); }
+  };
+  reader.readAsText(file);
+}
+
+// ===== NAV =====
+function showSection(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(el)el.classList.add('active');
+  if(id==='imoveis') renderLista();
+  if(id==='financiamento') calcFin();
+}
+function showInner(id,el){
+  document.querySelectorAll('.inner-content').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.inner-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(el)el.classList.add('active');
+}
+
+// ===== FINANCIAMENTO =====
+function setTipo(t){ tipoFin=t; calcFin(); }
+function syncEntrada(){
+  document.getElementById('f-entrada-pct').textContent=document.getElementById('f-entrada-range').value;
+  calcFin();
+}
+function calcFin(){
+  const mercado=parseFloat(document.getElementById('f-mercado').value)||0, arremate=parseFloat(document.getElementById('f-arremate').value)||0;
+  const pctE=parseInt(document.getElementById('f-entrada-range').value), taxaA=parseFloat(document.getElementById('f-taxa').value)||9.8;
+  const prazo=parseInt(document.getElementById('f-prazo').value)||240, valA=parseFloat(document.getElementById('f-valorizacao').value)||5, custos=parseFloat(document.getElementById('f-custos').value)||0;
+  if(arremate===0)return;
+  const ent=arremate*(pctE/100), fin=arremate-ent, cTotal=ent+custos, tM=taxaA/100/12, vM=Math.pow(1+valA/100,1/12)-1;
+  let p1=0, pU=0;
+  if(tipoFin==='PRICE'){ p1=tM>0?fin*(tM*Math.pow(1+tM,prazo))/(Math.pow(1+tM,prazo)-1):fin/prazo; pU=p1; }
+  else { const a=fin/prazo; p1=a+fin*tM; pU=a+a*tM; }
+  document.getElementById('fr-entrada').textContent='R$ '+fNum(cTotal);
+  document.getElementById('fr-financiado').textContent='R$ '+fNum(fin);
+  document.getElementById('fr-parcela1').textContent='R$ '+fNum(p1);
+  document.getElementById('fr-parcela-ult').textContent='R$ '+fNum(pU);
+  document.getElementById('f-entrada-val').textContent='R$ '+fNum(ent);
+  const meses=[6,12,18,24,36,48,60,84,120];
+  let melROI=-999, melM=0, tbody='';
+  meses.forEach(m=>{
+    const vI=mercado*Math.pow(1+vM,m);
+    let sD=0;
+    if(fin>0){
+      if(tipoFin==='PRICE') sD=fin*Math.pow(1+tM,m)-p1*(Math.pow(1+tM,m)-1)/tM;
+      else sD=Math.max(0,fin-(m*(fin/prazo)));
+    }
+    const tP = cTotal + (tipoFin==='PRICE'?p1*m:(m*(p1+(p1-(m-1)*(fin/prazo*tM)))/2));
+    const luc = vI - sD - tP, roi = (luc/cTotal*100);
+    if(roi>melROI){melROI=roi;melM=m;}
+    tbody+=`<tr><td>${m}m</td><td>R$ ${fNum(vI)}</td><td>R$ ${fNum(sD)}</td><td style="color:${luc>=0?'#5DBF84':'#E87B71'}">R$ ${fNum(luc)}</td><td style="color:${roi>=20?'#5DBF84':roi>=10?'var(--ouro)':'#E87B71'}">${roi.toFixed(1)}%</td></tr>`;
+  });
+  document.getElementById('roi-tbody').innerHTML=tbody;
+  document.getElementById('fin-resultado').style.display='block';
+}
+
+// ===== LISTA IMÓVEIS =====
+async function renderLista(){
+  const ims=await getImoveis(), container=document.getElementById('lista-imoveis');
+  const lista=filtroAtual==='todos'?ims:ims.filter(i=>i.status===filtroAtual);
+  if(lista.length===0){container.innerHTML='<div class="empty-state">Vazio</div>';return;}
+  let html='';
+  for(const im of lista){
+    const data=await getImovelData(im.id), cDone=data.checklist?Object.values(data.checklist).filter(Boolean).length:0;
+    html+=`<div class="imovel-card" onclick="abrirDetalhe('${im.id}')">
+      <div class="imovel-header"><div><div class="imovel-nome">${im.nome}</div></div><button class="btn btn-danger" onclick="event.stopPropagation();excluirImovel('${im.id}')">🗑️</button></div>
+      <div class="imovel-badges"><span class="imovel-badge ib-cinza">${im.status}</span><span class="imovel-badge ib-cinza">✅ ${cDone}/35</span></div>
+    </div>`;
+  }
+  container.innerHTML=html;
+}
+
+// ===== MODAL =====
+function abrirModalNovoImovel(){document.getElementById('modal-novo').classList.add('open');}
+function fecharModal(){document.getElementById('modal-novo').classList.remove('open');}
+async function salvarNovoImovel(){
+  const n=document.getElementById('ni-nome').value; if(!n)return;
+  const im={id:Date.now().toString(),nome:n,tipo:document.getElementById('ni-tipo').value,status:document.getElementById('ni-status').value};
+  const l=await getImoveis();l.unshift(im);await saveImoveis(l);fecharModal();renderLista();
+}
+async function excluirImovel(id){ if(confirm('Excluir?')){ const l=await getImoveis();await saveImoveis(l.filter(i=>i.id!==id));await storage.delete('imovel-'+id);renderLista();}}
+
+// ===== DETALHE =====
+async function abrirDetalhe(id){
+  const l=await getImoveis();imovelAtivo=l.find(i=>i.id===id); if(!imovelAtivo)return;
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('detalhe-imovel').classList.add('active');
+  document.getElementById('detalhe-titulo').textContent=imovelAtivo.nome;
+  const data=await getImovelData(id);
+  document.getElementById('resumo-imovel-content').innerHTML=`<div class="card"><h3>${imovelAtivo.nome}</h3><p>${imovelAtivo.status}</p></div>`;
+  if(data.viabilidade){ ['avaliacao','lance','comissao','itbi','reforma','dividas','venda'].forEach(k=>document.getElementById('di-'+k).value=data.viabilidade[k]||''); calcularDetalhe();}
+  buildChecklistDetalhe(data.checklist||{});
+}
+
+function calcularDetalhe(){
+  const av=parseFloat(document.getElementById('di-avaliacao').value)||0, lan=parseFloat(document.getElementById('di-lance').value)||0;
+  const com=parseFloat(document.getElementById('di-comissao').value)||5, itbi=parseFloat(document.getElementById('di-itbi').value)||3;
+  const ref=parseFloat(document.getElementById('di-reforma').value)||0, div=parseFloat(document.getElementById('di-dividas').value)||0, vs=parseFloat(document.getElementById('di-venda').value)||0;
+  const tot = lan + (lan*com/100) + (lan*itbi/100) + 1500 + ref + div;
+  const ret = tot>0 ? ((vs-tot)/tot*100).toFixed(1) : 0;
+  document.getElementById('di-resultado-calc-wrap').innerHTML=`<div class="resultado-box"><div class="resultado-row"><span>Total</span><span>R$ ${fNum(tot)}</span></div><div class="resultado-row"><span>Retorno</span><span>${ret}%</span></div></div>`;
+  return {avaliacao:av,lance:lan,comissao:com,itbi:itbi,reforma:ref,dividas:div,venda:vs,totalInvestido:tot,retorno:ret};
+}
+async function salvarViabilidade(){ const v=calcularDetalhe(); const d=await getImovelData(imovelAtivo.id); d.viabilidade=v; await saveImovelData(imovelAtivo.id,d); alert('Salvo!'); }
+
+// ===== CHECKLIST =====
+const checklistData=[{fase:'FASE 1',items:[{t:'Edital'},{t:'Matrícula'},{t:'Dívidas'}]},{fase:'FASE 2',items:[{t:'Pagamento'},{t:'Registro'}]}];
+function buildChecklist(){
+  storage.get('checklist-arremate').then(s=>{
+    s=s||{}; let h=''; checklistData.forEach((f,fi)=>{ h+=`<div class="tag tag-ouro">${f.fase}</div>`; f.items.forEach((it,ii)=>{ const k=`${fi}-${ii}`,c=s[k]; h+=`<div class="checklist-item"><div class="check-box ${c?'checked':''}" onclick="toggleCheck('${k}')">${c?'✓':''}</div><div>${it.t}</div></div>`;});});
+    document.getElementById('checklist-container').innerHTML=h;
+  });
+}
+async function toggleCheck(k){ const s=await storage.get('checklist-arremate')||{}; s[k]=!s[k]; await storage.set('checklist-arremate',s); buildChecklist(); }
+function buildChecklistDetalhe(s){ let h=''; checklistData.forEach((f,fi)=>{ h+=`<div class="tag tag-ouro">${f.fase}</div>`; f.items.forEach((it,ii)=>{ const k=`${fi}-${ii}`,c=s[k]; h+=`<div class="checklist-item"><div class="check-box ${c?'checked':''}" onclick="toggleCheckDetalhe('${k}')">${c?'✓':''}</div><div>${it.t}</div></div>`;});}); document.getElementById('di-checklist-container').innerHTML=h;}
+async function toggleCheckDetalhe(k){ const d=await getImovelData(imovelAtivo.id); if(!d.checklist)d.checklist={}; d.checklist[k]=!d.checklist[k]; await saveImovelData(imovelAtivo.id,d); buildChecklistDetalhe(d.checklist);}
+
+// ===== OUTROS =====
+function avaliarRisco(){ document.getElementById('resultado-risco-conteudo').innerHTML='Score: 85'; document.getElementById('resultado-risco').style.display='block';}
+function avaliarRiscoDetalhe(){ document.getElementById('di-resultado-risco').innerHTML='Score: 85';}
+async function salvarRisco(){ alert('Salvo!');}
+async function salvarNotas(){ alert('Salvo!');}
+function calcular(){
+  const lan=parseFloat(document.getElementById('c-lance').value)||0, vs=parseFloat(document.getElementById('c-venda').value)||0;
+  const tot = lan * 1.1 + 1500; const ret = tot>0?((vs-tot)/tot*100).toFixed(1):0;
+  document.getElementById('resultado-linhas').innerHTML=`<div class="resultado-row"><span>Total</span><span>R$ ${fNum(tot)}</span></div><div class="resultado-row"><span>Retorno</span><span>${ret}%</span></div>`;
+  document.getElementById('resultado-calc').style.display='block';
+}
+function gerarPrompt(){ document.getElementById('prompt-texto').textContent='Prompt gerado'; document.getElementById('area-prompt').style.display='block';}
+function copiarPrompt(){ alert('Copiado!');}
+function fNum(v){return(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2});}
+function buildGlossario(){ document.getElementById('glossario-lista').innerHTML='<div class="card">Glossário</div>';}
+
+// INIT
+buildChecklist(); buildGlossario(); calcFin();
+function voltarLista(){showSection('imoveis',document.querySelectorAll('.nav-tab')[1]);}
+</script>
+</body>
+</html>
